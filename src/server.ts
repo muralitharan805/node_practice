@@ -1,12 +1,19 @@
 import express from "express";
 import { Request, Response } from "express";
 
+import { connectToDatabase } from "./services/database.service";
+import { gamesRouter } from "./routes/games.router";
 const app = express();
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Application works!");
-});
-
-app.listen(3000, () => {
-  console.log("Application started on port 3000!");
-});
+connectToDatabase()
+  .then(() => {
+    app.use("/user", gamesRouter);
+    const port = 4201;
+    app.listen(port, () => {
+      console.log(`Server started at http://localhost:${port}`);
+    });
+  })
+  .catch((error: Error) => {
+    console.error("Database connection failed", error);
+    process.exit();
+  });
