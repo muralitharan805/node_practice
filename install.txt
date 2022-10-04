@@ -1,0 +1,11 @@
+npm install typescript --save-dev
+npm install express body-parser --save
+npx tsc --init
+npm install typescript -g
+npm install @types/express --save-dev
+npm install ts-node-dev --save-dev
+npm start
+
+
+ts file not directly compile should run typescript compile down javascript
+change - "ts-node-dev index.ts"
