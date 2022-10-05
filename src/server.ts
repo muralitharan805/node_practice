@@ -3,7 +3,10 @@ import { Request, Response } from "express";
 
 import { connectToDatabase } from "./services/database.service";
 import { userRouter } from "./routes/games.router";
+var cors = require("cors");
+
 const app = express();
+app.use(cors());
 
 connectToDatabase()
   .then(() => {
