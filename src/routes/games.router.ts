@@ -31,6 +31,17 @@ userRouter.get("/", async (_req: Request, res: Response) => {
 userRouter.post("/exists", async (_req: Request, res: Response) => {
   try {
     const newGame = _req.body as User;
+
+    if (newGame.phone != null) {
+      console.log("checkk true");
+
+      //   console.log("checkk true", newGame.phone as unknown as number);
+      //   const chnge: number = _req.body.phone as unknown as number;
+      newGame["phone"] = Number(newGame.phone);
+    }
+
+    console.log("checkk true", newGame);
+
     const users = await collections.user?.find({ ...newGame }).toArray();
 
     let res_msg: Response_Body = {
