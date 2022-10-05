@@ -33,16 +33,21 @@ userRouter.post("/exists", async (_req: Request, res: Response) => {
     const newGame = _req.body as User;
     const users = await collections.user?.find({ ...newGame }).toArray();
 
-    if (users) {
-      const res_msg: Response_Body = {
-        status: false,
-        result: [],
-      };
-    }
-    const res_msg: Response_Body = {
+    let res_msg: Response_Body = {
       status: true,
       result: users as Array<any>,
     };
+    if (users) {
+      console.log(users?.length < 0);
+
+      if (users.length == 0) {
+        res_msg = {
+          status: false,
+          result: [],
+        };
+      }
+    }
+
     res.status(200).send(res_msg);
   } catch (error) {
     res.status(500).send(error);
