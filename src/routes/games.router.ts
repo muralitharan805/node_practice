@@ -2,32 +2,66 @@
 import express, { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { collections } from "../services/database.service";
-import Game from "../model/user";
+import User from "../model/user";
+import { Response_Body } from "src/model/response";
 // Global Config
-export const gamesRouter = express.Router();
+export const userRouter = express.Router();
 
-gamesRouter.use(express.json());
+userRouter.use(express.json());
 // GET
-gamesRouter.get("/", async (_req: Request, res: Response) => {
+userRouter.get("/", async (_req: Request, res: Response) => {
   try {
-    const games = await collections.games?.find({}).toArray();
-
-    res.status(200).send(games);
+    const users = await collections.user?.find({}).toArray();
+    if (users) {
+      const res_msg: Response_Body = {
+        status: false,
+        result: [],
+      };
+    }
+    const res_msg: Response_Body = {
+      status: true,
+      result: users as Array<any>,
+    };
+    res.status(200).send(res_msg);
   } catch (error) {
     res.status(500).send(error);
   }
 });
 // POST
-gamesRouter.post("/", async (req: Request, res: Response) => {
+userRouter.post("/exists", async (_req: Request, res: Response) => {
   try {
-    const newGame = req.body as Game;
-    const result = await collections.games?.insertOne(newGame);
+    const newGame = _req.body as User;
+    const users = await collections.user?.find({ ...newGame }).toArray();
 
-    result
-      ? res
-          .status(201)
-          .send(`Successfully created a new game with id ${result.insertedId}`)
-      : res.status(500).send("Failed to create a new game.");
+    if (users) {
+      const res_msg: Response_Body = {
+        status: false,
+        result: [],
+      };
+    }
+    const res_msg: Response_Body = {
+      status: true,
+      result: users as Array<any>,
+    };
+    res.status(200).send(res_msg);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+userRouter.post("/", async (req: Request, res: Response) => {
+  try {
+    const newGame = req.body as User;
+    const result = await collections.user?.insertOne(newGame);
+    const res_msg: Response_Body = {
+      status: true,
+      result: { id: result?.insertedId },
+    };
+    const res_msg_err: Response_Body = {
+      status: false,
+      result: [],
+    };
+    result ? res.status(201).send(res_msg) : res.status(500).send(res_msg_err);
   } catch (error) {
     console.error(error);
     res.status(400).send(error);
