@@ -3,12 +3,18 @@ import { Request, Response } from "express";
 
 import { connectToDatabase } from "./services/database.service";
 import { userRouter } from "./routes/games.router";
+import * as dotenv from "dotenv";
+dotenv.config();
 var cors = require("cors");
 
 const app = express();
 app.use(cors());
 app.use(express.static("public"));
-app.use("/uploads", express.static("uploads"));
+
+app.use(
+  ("/" + process.env.USER_FILE_FOLDER) as string,
+  express.static(process.env.USER_FILE_FOLDER as string)
+);
 
 connectToDatabase()
   .then(() => {
