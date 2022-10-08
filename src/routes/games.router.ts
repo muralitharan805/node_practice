@@ -118,6 +118,7 @@ userRouter.post(
 userRouter.post("/", async (req: Request, res: Response) => {
   try {
     const newGame = req.body as User;
+    newGame.profile_img = process.env.HOST_NAME + "/" + newGame.profile_img;
     const result = await collections.user?.insertOne(newGame);
     const res_msg: Response_Body = {
       status: true,
